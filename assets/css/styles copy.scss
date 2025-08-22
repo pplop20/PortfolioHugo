@@ -1,0 +1,713 @@
+// =============================================
+// PHOTOGRAPHY PORTFOLIO SCSS
+// =============================================
+// 
+// COMPILATION INSTRUCTIONS:
+// 1. Install Sass: npm install -g sass
+// 2. Compile SCSS to CSS: sass styles.scss:styles.css --watch
+// 3. For production (minified): sass styles.scss:styles.min.css --style=compressed
+// 4. Reference in HTML: <link rel="stylesheet" href="assets/css/styles.css">
+//
+// Alternative: Use a build tool like Webpack, Gulp, or Parcel
+// =============================================
+
+// =============================================
+// VARIABLES
+// =============================================
+
+// Colors
+$color-primary: #000;
+$color-secondary: #fff;
+$color-accent: #333;
+$color-text-light: #666;
+$color-bg-overlay: rgba(0, 0, 0, 0.9);
+$color-bg-nav: rgba(255, 255, 255, 0.95);
+$color-bg-dropdown: rgba(0, 0, 0, 0.8);
+
+// Typography
+$font-primary: 'Arial', sans-serif;
+$font-size-base: 16px;
+$font-size-nav: 1.2rem;
+$font-size-dropdown: 0.9rem;
+$font-size-hero-desktop: 7rem;
+$font-size-hero-tablet: 4rem;
+$font-size-hero-mobile: 2rem;
+$font-weight-bold: bold;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+$spacing-xl: 3rem;
+$spacing-xxl: 1rem;
+
+// Layout
+$max-width-content: 1400px;
+$max-width-gallery: 1600px;
+$gallery-gap-desktop: 10px;
+$gallery-gap-tablet: 15px;
+$gallery-gap-mobile: 10px;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-medium: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Breakpoints
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-wide: 1440px;
+
+// Z-index layers
+$z-nav: 1000;
+$z-dropdown: 1100;
+$z-modal: 2000;
+$z-modal-content: 2100;
+
+// =============================================
+// MIXINS
+// =============================================
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin transition($properties...) {
+  transition-property: $properties;
+  transition-duration: $transition-medium;
+  transition-timing-function: ease;
+}
+
+@mixin hover-opacity($opacity: 0.8) {
+  &:hover {
+    opacity: $opacity;
+    @include transition(opacity);
+  }
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == 'mobile' {
+    @media (max-width: $breakpoint-mobile) {
+      @content;
+    }
+  } @else if $breakpoint == 'tablet' {
+    @media (max-width: $breakpoint-tablet) {
+      @content;
+    }
+  } @else if $breakpoint == 'desktop' {
+    @media (min-width: $breakpoint-desktop) {
+      @content;
+    }
+  } @else if $breakpoint == 'wide' {
+    @media (min-width: $breakpoint-wide) {
+      @content;
+    }
+  }
+}
+
+// =============================================
+// RESET & BASE STYLES
+// =============================================
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: $font-primary;
+  font-size: $font-size-base;
+  line-height: 1.6;
+  color: $color-primary;
+  background: $color-secondary;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+// =============================================
+// NAVIGATION STYLES
+// =============================================
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  // padding: $spacing-sm 0;
+
+  z-index: $z-nav;
+  &.home {
+      background: $color-bg-nav;
+      backdrop-filter: blur(10px);
+  }
+
+  .nav-list {
+    @include flex-center;
+    gap: $spacing-xl;
+
+    @include responsive(tablet) {
+      gap: $spacing-lg;
+    }
+
+    @include responsive(mobile) {
+      gap: $spacing-md;
+    }
+  }
+
+  .nav-item {
+    position: relative;
+
+    .nav-link {
+      font-weight: $font-weight-bold;
+      font-size: $font-size-nav;
+      padding: 0 $spacing-sm;
+      @include transition(opacity);
+      @include hover-opacity(0.7);
+
+      @include responsive(tablet) {
+        font-size: $font-size-dropdown;
+      }
+    }
+
+    &.dropdown {
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: $color-bg-nav;
+        backdrop-filter: blur(10px);
+        margin-top: $spacing-xs;
+        padding: $spacing-sm 0;
+        min-width: 180px;
+        opacity: 0;
+        visibility: hidden;
+        @include transition(opacity, visibility);
+        border-radius: 4px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+        li {
+          padding: $spacing-xs $spacing-md;
+
+          .dropdown-link {
+            font-weight: $font-weight-bold;
+            font-size: $font-size-dropdown;
+            display: block;
+            @include transition(opacity);
+            @include hover-opacity(0.7);
+          }
+        }
+      }
+
+      &:hover .dropdown-menu,
+      &.active .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
+// =============================================
+// IMPROVED GALLERY LAYOUT
+// =============================================
+
+.gallery-section {
+  padding-left: $spacing-lg;
+  padding-right: $spacing-lg;
+  max-width: $max-width-gallery;
+  margin: 0 auto;
+
+  @include responsive(tablet) {
+    padding: $spacing-lg $spacing-md;
+  }
+
+  @include responsive(mobile) {
+    padding: $spacing-md $spacing-sm;
+  }
+}
+
+// Option 1: Masonry-style layout (recommended)
+.gallery-container {
+  column-count: 3;
+  column-gap: $gallery-gap-desktop;
+  
+  @include responsive(tablet) {
+    column-count: 2;
+    column-gap: $gallery-gap-tablet;
+  }
+  
+  @include responsive(mobile) {
+    column-count: 1;
+    column-gap: 0;
+  }
+
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: $gallery-gap-desktop;
+    
+    @include responsive(tablet) {
+      margin-bottom: $gallery-gap-tablet;
+    }
+    
+    @include responsive(mobile) {
+      margin-bottom: $gallery-gap-mobile;
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+      @include transition(transform, opacity);
+      
+      &:hover {
+        opacity: 0.95;
+        transform: scale(1.01);
+      }
+    }
+  }
+}
+
+// Option 2: Flexible row-based layout (alternative)
+.gallery-container-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gallery-gap-desktop;
+  
+  @include responsive(tablet) {
+    gap: $gallery-gap-tablet;
+  }
+  
+  @include responsive(mobile) {
+    gap: $gallery-gap-mobile;
+  }
+
+  .gallery-item {
+    flex: 1 1 auto;
+    max-width: 100%;
+    
+    // Allow images to scale based on their aspect ratio
+    &.portrait {
+      flex-basis: calc(33.333% - #{$gallery-gap-desktop});
+      
+      @include responsive(tablet) {
+        flex-basis: calc(50% - #{$gallery-gap-tablet});
+      }
+      
+      @include responsive(mobile) {
+        flex-basis: 100%;
+      }
+    }
+    
+    &.landscape {
+      flex-basis: calc(50% - #{$gallery-gap-desktop});
+      
+      @include responsive(tablet) {
+        flex-basis: 100%;
+      }
+    }
+    
+    &.square {
+      flex-basis: calc(33.333% - #{$gallery-gap-desktop});
+      
+      @include responsive(tablet) {
+        flex-basis: calc(50% - #{$gallery-gap-tablet});
+      }
+      
+      @include responsive(mobile) {
+        flex-basis: 100%;
+      }
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+      @include transition(opacity);
+      @include hover-opacity(0.95);
+    }
+  }
+}
+
+// Option 3: CSS Grid with auto-fit (modern approach)
+.gallery-container-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: auto;
+  grid-auto-flow: dense;
+  gap: $gallery-gap-desktop;
+  
+  @include responsive(tablet) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $gallery-gap-tablet;
+  }
+  
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+    gap: $gallery-gap-mobile;
+  }
+
+  .gallery-item {
+    // Allow items to span multiple grid cells based on aspect ratio
+    &.portrait {
+      grid-row: span 2;
+    }
+    
+    &.landscape {
+      grid-column: span 2;
+      
+      @include responsive(tablet) {
+        grid-column: span 1;
+      }
+    }
+    
+    &.large {
+      grid-column: span 2;
+      grid-row: span 2;
+      
+      @include responsive(tablet) {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      @include transition(transform, opacity);
+      
+      &:hover {
+        opacity: 0.95;
+        transform: scale(1.02);
+      }
+    }
+  }
+}
+
+// =============================================
+// SLIDESHOW MODAL
+// =============================================
+
+.slideshow-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $color-bg-overlay;
+  z-index: $z-modal;
+  animation: fadeIn $transition-medium;
+
+  &.active {
+    display: flex;
+    @include flex-center;
+  }
+
+  .slideshow-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    @include flex-center;
+    padding: $spacing-lg;
+
+    .slideshow-image {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      animation: zoomIn $transition-slow;
+    }
+
+    .slideshow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      color: $color-secondary;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      cursor: pointer;
+      padding: $spacing-sm $spacing-md;
+      border-radius: 4px;
+      @include transition(all);
+      z-index: $z-modal-content;
+
+      &.prev-btn {
+        left: $spacing-lg;
+      }
+
+      &.next-btn {
+        right: $spacing-lg;
+      }
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      @include responsive(mobile) {
+        font-size: 2rem;
+        padding: $spacing-xs $spacing-sm;
+        
+        &.prev-btn {
+          left: $spacing-sm;
+        }
+
+        &.next-btn {
+          right: $spacing-sm;
+        }
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: $spacing-lg;
+      right: $spacing-lg;
+      font-size: 2rem;
+      color: $color-secondary;
+      background: none;
+      border: none;
+      cursor: pointer;
+      @include transition(transform);
+
+      &:hover {
+        transform: scale(1.2);
+      }
+
+      @include responsive(mobile) {
+        top: $spacing-sm;
+        right: $spacing-sm;
+      }
+    }
+
+    .slideshow-alt-text {
+      position: absolute;
+      bottom: $spacing-lg;
+      left: 50%;
+      transform: translateX(-50%);
+      color: $color-secondary;
+      font-size: 0.9rem;
+      font-style: italic;
+      background: rgba(0, 0, 0, 0.4);
+      padding: $spacing-xs $spacing-sm;
+      border-radius: 4px;
+      max-width: 80%;
+      text-align: center;
+      
+      @include responsive(mobile) {
+        bottom: $spacing-sm;
+        font-size: 0.8rem;
+        max-width: 90%;
+      }
+    }
+  }
+}
+
+// =============================================
+// ANIMATIONS
+// =============================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// =============================================
+// HOMEPAGE STYLES
+// =============================================
+
+.fullscreen-background {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  @include flex-center;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/portfolio_hugo/assets/img/homepage_main/1.JPG');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    @include transition(opacity);
+  }
+
+  .content-container {
+    @include flex-center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    color: $color-secondary;
+    mix-blend-mode: difference;
+
+    .header-1,
+    .header-2,
+    .header-3 {
+      font-family: $font-primary;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-hero-desktop;
+      @include flex-center;
+      flex: 1;
+      width: 100%;
+      max-width: 90%;
+      padding: 0 $spacing-sm;
+
+      @include responsive(tablet) {
+        font-size: $font-size-hero-tablet;
+      }
+
+      @include responsive(mobile) {
+        font-size: $font-size-hero-mobile;
+      }
+    }
+
+    .main-nav {
+      @include flex-center;
+      width: 100%;
+      margin-bottom: $spacing-lg;
+      z-index: 3;
+
+      .nav-list {
+        @include flex-center;
+        gap: $spacing-xl;
+
+        @include responsive(tablet) {
+          gap: $spacing-lg;
+        }
+
+        .nav-item {
+          position: relative;
+
+          .nav-link {
+            font-family: $font-primary;
+            font-weight: $font-weight-bold;
+            color: $color-secondary;
+            font-size: $font-size-nav;
+            padding: 0 $spacing-sm;
+            @include transition(opacity);
+            @include hover-opacity(0.7);
+
+            @include responsive(tablet) {
+              font-size: $font-size-dropdown;
+            }
+          }
+
+          &.dropdown {
+            .dropdown-menu {
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              background: $color-bg-dropdown;
+              backdrop-filter: blur(10px);
+              padding: $spacing-sm 0;
+              min-width: 150px;
+              opacity: 0;
+              visibility: hidden;
+              @include transition(all);
+              border-radius: 4px;
+
+              li {
+                padding: $spacing-xs $spacing-sm;
+
+                .dropdown-link {
+                  font-family: $font-primary;
+                  font-weight: $font-weight-bold;
+                  color: $color-secondary;
+                  font-size: $font-size-dropdown;
+                  display: block;
+                  @include transition(opacity);
+                  @include hover-opacity(0.7);
+                }
+              }
+            }
+
+            &.active .dropdown-menu {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// =============================================
+// UTILITY CLASSES
+// =============================================
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: $spacing-sm; }
+.mt-2 { margin-top: $spacing-md; }
+.mt-3 { margin-top: $spacing-lg; }
+.mt-4 { margin-top: $spacing-xl; }
+
+.mb-1 { margin-bottom: $spacing-sm; }
+.mb-2 { margin-bottom: $spacing-md; }
+.mb-3 { margin-bottom: $spacing-lg; }
+.mb-4 { margin-bottom: $spacing-xl; }
+
+.p-1 { padding: $spacing-sm; }
+.p-2 { padding: $spacing-md; }
+.p-3 { padding: $spacing-lg; }
+.p-4 { padding: $spacing-xl; }
+
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}

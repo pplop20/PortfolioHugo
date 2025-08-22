@@ -1,0 +1,892 @@
+// =============================================
+// PHOTOGRAPHY PORTFOLIO SCSS
+// =============================================
+// 
+// COMPILATION INSTRUCTIONS:
+// 1. Install Sass: npm install -g sass
+// 2. Compile SCSS to CSS: sass styles.scss:styles.css --watch
+// 3. For production (minified): sass styles.scss:styles.min.css --style=compressed
+// 4. Reference in HTML: <link rel="stylesheet" href="assets/css/styles.css">
+//
+// Alternative: Use a build tool like Webpack, Gulp, or Parcel
+// =============================================
+
+// =============================================
+// FONT FACE DECLARATIONS
+// =============================================
+
+@font-face {
+  font-family: 'TT2020StyleF';
+  src: url('../fonts/TT2020StyleF-Regular-ASCII.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT2020StyleD';
+  src: url('../fonts/TT2020StyleD-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT2020StyleB';
+  src: url('../fonts/TT2020StyleB-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+// =============================================
+// VARIABLES
+// =============================================
+
+// Colors
+$color-primary: #000;
+$color-secondary: #DEDEDE;
+$color-accent: #333;
+$color-text-light: #666;
+$color-bg-overlay: rgba(0, 0, 0, 0.9);
+$color-bg-nav: #DEDEDE;
+$color-bg-dropdown: rgba(0, 0, 0, 0.8);
+
+
+// Typography
+$font-primary: 'TT2020StyleD', Arial, sans-serif;
+$font-nav: 'TT2020StyleF', Arial, sans-serif;
+$font-info: 'TT2020StyleD', Arial, sans-serif;
+$font-size-base: 16px;
+$font-size-nav: 1.2rem;
+$font-size-dropdown: 0.9rem;
+$font-size-hero-desktop: 13rem;
+$font-size-hero-tablet: 4rem;
+$font-size-hero-mobile: 2rem;
+$font-weight-bold: bold;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+$spacing-xl: 3rem;
+$spacing-xxl: 1rem;
+
+// Layout
+$max-width-content: 1400px;
+$max-width-gallery: 1600px;
+$gallery-gap-desktop: 10px;
+$gallery-gap-tablet: 15px;
+$gallery-gap-mobile: 10px;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-medium: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Breakpoints
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-wide: 1440px;
+
+// Z-index layers
+$z-nav: 1000;
+$z-dropdown: 1100;
+$z-modal: 2000;
+$z-modal-content: 2100;
+
+// =============================================
+// MIXINS
+// =============================================
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin transition($properties...) {
+  transition-property: $properties;
+  transition-duration: $transition-medium;
+  transition-timing-function: ease;
+}
+
+@mixin hover-opacity($opacity: 0.8) {
+  &:hover {
+    opacity: $opacity;
+    @include transition(opacity);
+  }
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == 'mobile' {
+    @media (max-width: $breakpoint-mobile) {
+      @content;
+    }
+  } @else if $breakpoint == 'tablet' {
+    @media (max-width: $breakpoint-tablet) {
+      @content;
+    }
+  } @else if $breakpoint == 'desktop' {
+    @media (min-width: $breakpoint-desktop) {
+      @content;
+    }
+  } @else if $breakpoint == 'wide' {
+    @media (min-width: $breakpoint-wide) {
+      @content;
+    }
+  }
+}
+
+// =============================================
+// RESET & BASE STYLES
+// =============================================
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  //font-family: $font-primary;
+  font-size: $font-size-base;
+  line-height: 1.6;
+  color: $color-primary;
+  background: $color-secondary;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+// =============================================
+// NAVIGATION STYLES
+// =============================================
+
+.page-wrapper{
+      min-height: 100vh; 
+}
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  // SPACING ADJUSTMENT: Change the padding value below to adjust spacing between top of screen and navbar
+  padding: 0.3rem 0;
+  background: $color-secondary; // White background
+  z-index: $z-nav;
+
+
+  .nav-list {
+    @include flex-center;
+    gap: $spacing-xl;
+
+    @include responsive(tablet) {
+      gap: $spacing-lg;
+    }
+
+    @include responsive(mobile) {
+      gap: $spacing-md;
+    }
+  }
+
+  .nav-item {
+    position: relative;
+
+    .nav-link {
+      font-family: $font-nav !important;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-nav;
+      padding: 0 $spacing-sm;
+      @include transition(opacity);
+      @include hover-opacity(0.7);
+      color: $color-primary; // Black text
+
+      @include responsive(tablet) {
+        font-size: $font-size-dropdown;
+      }
+    }
+
+    &.dropdown {
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: $color-bg-nav;
+        backdrop-filter: blur(10px);
+        //margin-top: $spacing-xs;
+        //padding: $spacing-sm 0;
+        min-width: 180px;
+        opacity: 0;
+        visibility: hidden;
+        @include transition(opacity, visibility);
+        //border-radius: 4px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+        li {
+          padding: $spacing-xs $spacing-md;
+
+          .dropdown-link {
+            font-family: $font-nav !important;
+            font-weight: $font-weight-bold;
+            font-size: $font-size-dropdown;
+            display: block;
+            @include transition(opacity);
+            @include hover-opacity(0.7);
+          }
+        }
+      }
+
+      &:hover .dropdown-menu,
+      &.active .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+  
+  &.home{
+      background: none !important;
+      padding: 0 !important;
+      
+      .nav-link {
+        color: $color-secondary !important;
+        mix-blend-mode: difference;
+      }
+      
+      .nav-item.dropdown .dropdown-menu {
+        background: $color-secondary !important;
+        mix-blend-mode: normal !important;
+        
+        .dropdown-link {
+          color: $color-primary !important;
+        }
+      }
+  }
+}
+
+.wrapper {
+  max-width: 100%;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.gallery{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(10,200px);
+  gap: 0.2rem;
+
+  .gallery_item-1 {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 3p;
+  }
+
+    .gallery_item-2 {
+    grid-column: 2 / span 2;
+    grid-row: 1 / span 1;
+  }
+
+}
+
+.gallery_image{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// =============================================
+// IMPROVED GALLERY LAYOUT
+// =============================================
+
+.gallery-section {
+  padding-left: $spacing-lg;
+  padding-right: $spacing-lg;
+  padding-top: 1rem;
+  max-width: $max-width-gallery;
+  margin: 0 auto;
+
+  @include responsive(tablet) {
+    padding: $spacing-lg $spacing-md;
+  }
+
+  @include responsive(mobile) {
+    padding: $spacing-md $spacing-sm;
+  }
+}
+
+// Option 1: Masonry-style layout (recommended)
+.gallery-container {
+  column-count: 3;
+  column-gap: $gallery-gap-desktop;
+  
+  @include responsive(tablet) {
+    column-count: 2;
+    column-gap: $gallery-gap-tablet;
+  }
+  
+  @include responsive(mobile) {
+    column-count: 1;
+    column-gap: 0;
+  }
+
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: $gallery-gap-desktop;
+    
+    @include responsive(tablet) {
+      margin-bottom: $gallery-gap-tablet;
+    }
+    
+    @include responsive(mobile) {
+      margin-bottom: $gallery-gap-mobile;
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+      @include transition(transform, opacity);
+      
+      &:hover {
+        opacity: 0.95;
+        transform: scale(1.01);
+      }
+    }
+  }
+}
+
+// Option 2: Flexible row-based layout (alternative)
+.gallery-container-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gallery-gap-desktop;
+  
+  @include responsive(tablet) {
+    gap: $gallery-gap-tablet;
+  }
+  
+  @include responsive(mobile) {
+    gap: $gallery-gap-mobile;
+  }
+
+  .gallery-item {
+    flex: 1 1 auto;
+    max-width: 100%;
+    
+    // Allow images to scale based on their aspect ratio
+    &.portrait {
+      flex-basis: calc(33.333% - #{$gallery-gap-desktop});
+      
+      @include responsive(tablet) {
+        flex-basis: calc(50% - #{$gallery-gap-tablet});
+      }
+      
+      @include responsive(mobile) {
+        flex-basis: 100%;
+      }
+    }
+    
+    &.landscape {
+      flex-basis: calc(50% - #{$gallery-gap-desktop});
+      
+      @include responsive(tablet) {
+        flex-basis: 100%;
+      }
+    }
+    
+    &.square {
+      flex-basis: calc(33.333% - #{$gallery-gap-desktop});
+      
+      @include responsive(tablet) {
+        flex-basis: calc(50% - #{$gallery-gap-tablet});
+      }
+      
+      @include responsive(mobile) {
+        flex-basis: 100%;
+      }
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+      @include transition(opacity);
+      @include hover-opacity(0.95);
+    }
+  }
+}
+
+// Option 3: CSS Grid with auto-fit (modern approach)
+.gallery-container-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: auto;
+  grid-auto-flow: dense;
+  gap: $gallery-gap-desktop;
+  
+  @include responsive(tablet) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $gallery-gap-tablet;
+  }
+  
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+    gap: $gallery-gap-mobile;
+  }
+
+  .gallery-item {
+    // Allow items to span multiple grid cells based on aspect ratio
+    &.p {
+      grid-row: span 2;
+    }
+    
+    &.l {
+      grid-column: span 2;
+      
+      @include responsive(tablet) {
+        grid-column: span 1;
+      }
+    }
+    
+    &.large {
+      grid-column: span 2;
+      grid-row: span 2;
+      
+      @include responsive(tablet) {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      @include transition(transform, opacity);
+      
+      &:hover {
+        opacity: 0.95;
+        transform: scale(1.02);
+      }
+    }
+  }
+}
+
+// =============================================
+// SLIDESHOW MODAL
+// =============================================
+
+.slideshow-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $color-bg-overlay;
+  z-index: $z-modal;
+  animation: fadeIn $transition-medium;
+
+  &.active {
+    display: flex;
+    @include flex-center;
+  }
+
+  .slideshow-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    @include flex-center;
+    padding: $spacing-lg;
+
+    .slideshow-image {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      animation: zoomIn $transition-slow;
+    }
+
+    .slideshow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      color: $color-secondary;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: $spacing-sm $spacing-md;
+      @include transition(all);
+      z-index: $z-modal-content;
+
+      &.prev-btn {
+        left: 5px;
+      }
+
+      &.next-btn {
+        right: 5px;
+      }
+
+      &:hover {
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      @include responsive(mobile) {
+        font-size: 2rem;
+        padding: $spacing-xs $spacing-sm;
+        
+        &.prev-btn {
+          left: 5px;
+        }
+
+        &.next-btn {
+          right: 5px;
+        }
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: $spacing-lg;
+      right: $spacing-lg;
+      font-size: 2rem;
+      color: $color-secondary;
+      background: none;
+      border: none;
+      cursor: pointer;
+      @include transition(transform);
+
+      &:hover {
+        transform: scale(1.2);
+      }
+
+      @include responsive(mobile) {
+        top: $spacing-sm;
+        right: $spacing-sm;
+      }
+    }
+
+    .slideshow-alt-text {
+      position: fixed;
+      bottom: 0.125rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: $color-secondary;
+      font-family: $font-info;
+      font-size: 0.9rem;
+      font-style: italic;
+      background: transparent;
+      padding: $spacing-xs $spacing-sm;
+      max-width: 80%;
+      text-align: center;
+      
+      @include responsive(mobile) {
+        bottom: $spacing-sm;
+        font-size: 0.8rem;
+        max-width: 90%;
+      }
+    }
+  }
+}
+
+// =============================================
+// ANIMATIONS
+// =============================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// =============================================
+// HOMEPAGE STYLES
+// =============================================
+
+.fullscreen-background {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  @include flex-center;
+  overflow: visible;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/portfolio_hugo/assets/img/homepage_main/1.JPG');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    @include transition(opacity);
+  }
+
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    color: $color-secondary;
+    mix-blend-mode: difference;
+
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4rem//$spacing-sm; // Adjust this value to change spacing between title elements
+    }
+
+    .header-1,
+    .header-2,
+    .header-3 {
+      font-family: $font-primary !important;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-hero-desktop;
+      text-align: center;
+      margin: 0;
+      line-height: 0.9;
+
+      @include responsive(tablet) {
+        font-size: $font-size-hero-tablet;
+      }
+
+      @include responsive(mobile) {
+        font-size: $font-size-hero-mobile;
+      }
+    }
+
+  }
+}
+
+// =============================================
+// INFORMATION PAGE STYLES
+// =============================================
+
+.page-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  margin: 0 auto;
+  max-width: calc(100% - 600px);
+
+  .grid-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.row-top {
+      gap: 10px;
+      
+      .image-container {
+        flex: 1;
+        aspect-ratio: 1;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+    }
+
+    &.row-middle {
+      padding: 50px 0;
+      
+      p {
+        text-align: center;
+      }
+    }
+
+    &.row-bottom {
+      gap: 10px;
+      
+      .image-container {
+        flex: 1;
+        aspect-ratio: 1;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+// =============================================
+// UTILITY CLASSES
+// =============================================
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: $spacing-sm; }
+.mt-2 { margin-top: $spacing-md; }
+.mt-3 { margin-top: $spacing-lg; }
+.mt-4 { margin-top: $spacing-xl; }
+
+.mb-1 { margin-bottom: $spacing-sm; }
+.mb-2 { margin-bottom: $spacing-md; }
+.mb-3 { margin-bottom: $spacing-lg; }
+.mb-4 { margin-bottom: $spacing-xl; }
+
+.p-1 { padding: $spacing-sm; }
+.p-2 { padding: $spacing-md; }
+.p-3 { padding: $spacing-lg; }
+.p-4 { padding: $spacing-xl; }
+
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
+// =============================================
+// INFO PAGE CONTENT STYLES
+// =============================================
+
+.info-content {
+  @include flex-center;
+  flex-direction: column;
+  min-height: calc(100vh - 100px); // Adjust based on nav height
+  text-align: center;
+  color: $color-primary;
+  
+  .info-text {
+    font-family: $font-info;
+    font-size: 1.2rem;
+    margin-bottom: $spacing-lg; // SPACING CONTROL: Change this value to adjust space between text and links
+    
+    @include responsive(tablet) {
+      font-size: 1rem;
+      margin-bottom: $spacing-md;
+    }
+    
+    @include responsive(mobile) {
+      font-size: 0.9rem;
+      margin-bottom: $spacing-sm;
+      padding: 0 $spacing-sm;
+    }
+  }
+  
+  .social-links {
+    display: flex;
+    gap: $spacing-lg;
+    
+    @include responsive(mobile) {
+      gap: $spacing-md;
+    }
+    
+    .social-link {
+      color: $color-primary;
+      font-family: $font-info;
+      font-size: 1rem;
+      @include transition(text-decoration);
+      
+      &:hover {
+        text-decoration: line-through;
+      }
+      
+      @include responsive(tablet) {
+        font-size: 0.9rem;
+      }
+      
+      @include responsive(mobile) {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// =============================================
+// STICKY FOOTER STYLES
+// =============================================
+
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 0.3rem 0; // Same padding as top-nav
+  background: transparent;
+  z-index: $z-nav;
+  mix-blend-mode: difference; // Apply to the footer container
+  
+  .footer-content {
+    @include flex-center;
+    
+    .footer-title {
+      font-family: $font-nav;
+      font-weight: $font-weight-bold;
+      font-size: 1.4rem; // Slightly bigger than nav font size
+      color: $color-secondary; // White text
+      
+      @include responsive(tablet) {
+        font-size: 1.1rem;
+      }
+      
+      @include responsive(mobile) {
+        font-size: 1rem;
+      }
+    }
+  }
+}

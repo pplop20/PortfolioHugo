@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- UPDATE THESE FOR EACH PAGE -->
+    <title>Page Title - Your Name</title>
+    <meta name="description" content="Description of this specific page">
+    
+    <!-- Open Graph for social media sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Page Title - Your Name">
+    <meta property="og:description" content="Description of this specific page">
+    <meta property="og:image" content="https://yoursite.com/assets/images/ui/og-image.jpg">
+    <meta property="og:url" content="https://yoursite.com/this-page.html">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Your SCSS compiled to CSS -->
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+    
+    <!-- Basic structured data (update name and details) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Hugo A Chang",
+      "jobTitle": "Photographer",
+      "description": "Film set and event photographer",
+      "url": "https://yoursite.com"
+    }
+    </script>
+</head>
+<body>
+    <!-- Navigation at top of screen -->
+    <nav class="top-nav home">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="#" class="nav-link">HOME</a></li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle">WORK</a>
+                <ul class="dropdown-menu">
+                    <li><a href="./personales.html" class="dropdown-link">PERSONALES</a></li>
+                    <li><a href="./making_of.html" class="dropdown-link">MAKING OF</a></li>
+                    <li><a href="./sesiones.html" class="dropdown-link">SESIONES</a></li>
+                    <li><a href="./eventos.html" class="dropdown-link">EVENTOS</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="./information.html" class="nav-link">INFO</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Homepage main div -->
+     <div class="fullscreen-background">
+        <div class="content-container" id="Title">
+            <div class="title-group">
+                <h1 class="header-1">HUGO</h1>
+                <h2 class="header-2">A.</h2>
+                <h3 class="header-3">CHANG</h3>
+            </div>
+        </div>
+     </div>
+
+    <footer>
+        <!-- Footer content -->
+    </footer>
+
+    <!-- Your JavaScript at the end -->
+    <script src="assets/js/homepage-bg-changer.js"></script>
+    <script src="assets/js/navigation.js"></script>
+</body>
+</html>
