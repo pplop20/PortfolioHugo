@@ -60,7 +60,7 @@
       
       if (backgroundElement && secondLayer) {
         isTransitioning = true;
-        const newImagePath = `/portfolio_hugo/assets/img/homepage_main/${newImageNumber}.JPG`;
+        const newImagePath = `../img/homepage_main/${newImageNumber}.JPG`;
         
         // Preload the new image
         const tempImg = new Image();
@@ -117,7 +117,7 @@
     function preloadImages() {
       for (let i = 1; i <= 6; i++) {
         const img = new Image();
-        img.src = `/portfolio_hugo/assets/img/homepage_main/${i}.JPG`;
+        img.src = `../img/homepage_main/${i}.JPG`;
       }
     }
     
